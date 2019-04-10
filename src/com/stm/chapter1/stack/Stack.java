@@ -19,6 +19,23 @@ public class Stack<Item> implements Iterable<Item> {
     private static class Node<Item> {
         private Item item;
         private Node<Item> next;
+
+        Node() {
+        }
+
+        /*
+        // 构造函数
+        Node(Node<Item> x) {
+            item = x.item;
+            // 递归构造
+            if (x.next != null) next = new Node<>(x.next);
+        }
+        */
+
+        Node(Node<Item> x) {
+            this.item = x.item;
+            this.next = x.next;
+        }
     }
 
     /**
@@ -28,6 +45,24 @@ public class Stack<Item> implements Iterable<Item> {
         first = null;
         size = 0;
     }
+
+    /*
+    // 递归构造
+    public Stack(Stack<Item> s) {
+        first = new Node<>(s.first);
+    }
+    */
+
+    // 非递归构造
+    public Stack(Stack<Item> s) {
+        if (s.first != null) {
+            first = new Node<>(s.first);
+            for (Node x = first; x.next != null; x = x.next) {
+                x.next = new Node(x.next);
+            }
+        }
+    }
+
 
     public boolean isEmpty() {
         return first == null;
@@ -134,16 +169,19 @@ public class Stack<Item> implements Iterable<Item> {
             if (!item.equals("-")) {
                 stack.push(item);
             } else if (!stack.isEmpty()) {
-                StdOut.print(stack.pop()+" ");
+                StdOut.print(stack.pop() + " ");
             }
         }
         StdOut.println("(" + stack.size() + " left on stack)");
-        Iterator iterator = stack.iterator();
-        while (iterator.hasNext()) {
-            System.out.println(iterator.next());
-        }
+//        Iterator iterator = stack.iterator();
+//        while (iterator.hasNext()) {
+//            System.out.println(iterator.next());
+//        }
         for (String s : stack) {
-            System.out.println(s);
+            System.out.print(s + "\t");
         }
+        System.out.println();
+        Stack<String> stack1 = stack;
+        System.out.println(stack1);
     }
 }

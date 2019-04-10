@@ -1,5 +1,7 @@
 package com.stm.chapter1.exercises;
 
+import com.stm.chapter1.queue.Queue;
+
 /**
  * Author STM
  * Create 4/9/19 11:49 PM
@@ -25,7 +27,7 @@ public class Josephus {
             number += 1 - circle[index];    //累计（number 1表示在圈内，0表示出圈）
             /*
              * 淘汰一个人的步骤：
-             * 1. 该人的number == doom，输出该人的index + 1
+             * 1. 该人的number == doom，输出该人的index + 1（从1开始报数）
              * 2. 将该人的状态标为1
              * 3. 幸存人数减1
              * 4. 计数器归0
@@ -44,13 +46,21 @@ public class Josephus {
         }
     }
 
+    // 使用队列解决（双向链表FIFO）
     private static void solution02(int count, int doom) {
-        int result = doom;
-        for(int i = count; i >= doom; i--) {
-            for (int j = i; j <= count; j++) {
-                result = (result + doom) % j;
-                System.out.print(result + 1 + "\t");
+        Queue<Integer> queue = new Queue<>();
+        // 初始化 从0到count-1
+        for (int i = 0; i < count; i++) {
+            queue.enqueue(i);
+        }
+        // 循环直到队列为空
+        while (!queue.isEmpty()) {
+            // 从底部开始计数，每一轮未淘汰的人再入队列
+            for (int i = 0; i < doom - 1; i++) {
+                queue.enqueue(queue.dequeue());
             }
+            // 将淘汰的人直接出队列（+1 是假设从1开始报数）
+            System.out.print(queue.dequeue() + 1 + "\t");
         }
     }
 
